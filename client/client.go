@@ -90,6 +90,12 @@ func New(peer peers.Peer, peerID, infoHash [20]byte) (*Client, error) {
 	}, nil
 }
 
+func (c *Client) SendRequest(index, begin, length int) error {
+	req := message.FromRequest(index, begin, length)
+	_, err := c.Conn.Write(req.Serialize())
+	return err
+}
+
 func (c *Client) Read() (*message.Message, error) {
 	msg, err := message.Read(c.Conn)
 	return msg, err
